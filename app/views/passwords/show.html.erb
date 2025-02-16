@@ -1,31 +1,36 @@
-<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-    <div class="w-full max-w-md bg-white shadow-xl rounded-lg p-6 border border-gray-300">
-        <div class="flex items-center justify-between mb-4">
-            <h1 class="text-lg font-semibold text-gray-900">Saved Password</h1>
-            <%= link_to "Edit", edit_password_path, class: "text-blue-600 hover:underline" %>
-
+<div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 border border-gray-200">
+        <div class="flex items-center justify-between mb-5">
+            <h1 class="text-xl font-semibold text-gray-900">Saved Password</h1>
+            <%= link_to "Edit", edit_password_path, class: "text-blue-600 hover:underline text-sm" %>
         </div>
         
-        <div class="mb-4 border-b pb-4">
-            <h6 class="text-sm font-semibold text-gray-600">Website</h6>
-            <p class="text-gray-800 truncate"><%= @password.url %></p>
+        <div class="mb-5 pb-4 border-b">
+            <h6 class="text-xs font-semibold text-gray-500 uppercase">Website</h6>
+            <div class="flex items-center justify-between">
+                <p class="text-gray-800 truncate"> <%= @password.url %> </p>
+                 <%= link_to @password.url, target: :_blank do %>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                    <% end %>
+                </a>
+            </div>
         </div>
         
-        <div class="mb-4 border-b pb-4">
-            <h6 class="text-sm font-semibold text-gray-600">Username / Email</h6>
+        <div class="mb-5 pb-4 border-b flex items-center justify-between">
+        <div>
+            <h6 class="text-xs font-semibold text-gray-500 uppercase">Username / Email</h6>
             <p class="text-gray-800 truncate"><%= @password.username %></p>
         </div>
-        
-        <div class="mb-4 flex items-center justify-between">
-            <div>
-                <h6 class="text-sm font-semibold text-gray-600">Password</h6>
-                <p class="text-gray-800 truncate"><%=@password.password%></p>
-            </div>
-           
+        <%= button_tag "Copy", class: "px-5 py-2.5 bg-gray-200 rounded hover:bg-gray-300", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.username } %>
+    </div>
+    
+    <div class="mb-4 flex items-center justify-between">
+        <div>
+            <h6 class="text-xs font-semibold text-gray-500 uppercase">Password</h6>
+            <p class="text-gray-800 truncate"><%= @password.password %></p>
         </div>
-        
-        <div class="flex justify-end mt-4">
-           
-        </div>
+        <%= button_tag "Copy", class: "px-5 py-2.5 bg-gray-200 rounded hover:bg-gray-300", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.password } %>
     </div>
 </div>
+
