@@ -1,0 +1,27 @@
+<div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 border border-gray-200">
+  <h1 class="text-xl font-semibold text-gray-900 mb-4">Share Password</h1>
+
+  <% if @password.present? %>
+    <%= form_with model: @user_password, url: password_shares_path(@password), class: "space-y-4" do |form| %>
+
+      <!-- User Selection -->
+      <div>
+        <%= form.label :user_id, "Select a user to share with", class: "text-sm font-medium text-gray-700" %>
+        <%= form.collection_select :user_id, @users, :id, :email, { prompt: "Choose a user" }, class: "w-full mt-1 p-2 border rounded-lg text-gray-800" %>
+      </div>
+
+      <!-- Share Button -->
+      <div class="text-right">
+        <%= form.submit "Share", class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition" %>
+      </div>
+    <% end %>
+
+  <% else %>
+    <p class="text-red-600 text-sm font-medium">No password selected.</p>
+  <% end %>
+</div>
+
+<!-- Back Button -->
+<div class="mt-4">
+  <%= link_to "← Back", @password, class: "text-gray-600 hover:underline text-sm" %>
+</div>

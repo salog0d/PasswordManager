@@ -1,36 +1,70 @@
-<div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 border border-gray-200">
-        <div class="flex items-center justify-between mb-5">
-            <h1 class="text-xl font-semibold text-gray-900">Saved Password</h1>
-            <%= link_to "Edit", edit_password_path, class: "text-blue-600 hover:underline text-sm" %>
-        </div>
-        
-        <div class="mb-5 pb-4 border-b">
-            <h6 class="text-xs font-semibold text-gray-500 uppercase">Website</h6>
-            <div class="flex items-center justify-between">
-                <p class="text-gray-800 truncate"> <%= @password.url %> </p>
-                 <%= link_to @password.url, target: :_blank do %>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                    </svg>
-                    <% end %>
-                </a>
-            </div>
-        </div>
-        
-        <div class="mb-5 pb-4 border-b flex items-center justify-between">
-        <div>
-            <h6 class="text-xs font-semibold text-gray-500 uppercase">Username / Email</h6>
-            <p class="text-gray-800 truncate"><%= @password.username %></p>
-        </div>
-        <%= button_tag "Copy", class: "px-5 py-2.5 bg-gray-200 rounded hover:bg-gray-300", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.username } %>
-    </div>
-    
-    <div class="mb-4 flex items-center justify-between">
-        <div>
-            <h6 class="text-xs font-semibold text-gray-500 uppercase">Password</h6>
-            <p class="text-gray-800 truncate"><%= @password.password %></p>
-        </div>
-        <%= button_tag "Copy", class: "px-5 py-2.5 bg-gray-200 rounded hover:bg-gray-300", data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.password } %>
-    </div>
+<!-- Botón de regreso -->
+<div class="mb-4">
+  <%= link_to "← Back", root_path, class: "text-gray-600 hover:underline text-sm font-medium" %>
 </div>
 
+<!-- Tarjeta principal con todo unificado -->
+<div class="w-full max-w-md bg-white shadow-lg rounded-xl p-6 border border-gray-200 space-y-5">
+
+  <!-- Encabezado -->
+  <div class="flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-gray-900">Saved Password</h1>
+    <%= link_to "Edit", edit_password_path(@password), class: "text-blue-600 hover:underline text-sm font-medium transition" %>
+  </div>
+
+  <!-- Website -->
+  <div class="border-b pb-4">
+    <h6 class="text-xs font-semibold text-gray-500 uppercase mb-1">Website</h6>
+    <div class="flex items-center justify-between">
+      <p class="text-gray-800 truncate"><%= @password.url %></p>
+     <%= link_to @password.url, target: :_blank do %>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+        </svg>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Username / Email -->
+  <div class="border-b pb-4 flex items-center justify-between">
+    <div>
+      <h6 class="text-xs font-semibold text-gray-500 uppercase mb-1">Username / Email</h6>
+      <p class="text-gray-800 truncate"><%= @password.username %></p>
+    </div>
+    <%= button_tag "Copy", class: "px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition", 
+        data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.username } %>
+  </div>
+
+  <!-- Password -->
+  <div class="border-b pb-4 flex items-center justify-between">
+    <div>
+      <h6 class="text-xs font-semibold text-gray-500 uppercase mb-1">Password</h6>
+      <p class="text-gray-800 truncate"><%= @password.password %></p>
+    </div>
+    <%= button_tag "Copy", class: "px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition", 
+        data: { controller: "clipboard", action: "click->clipboard#copy", clipboard_content_value: @password.password } %>
+  </div>
+
+  <!-- Share Section y Users Shared With juntos -->
+  
+    <h6 class="text-xs font-semibold text-gray-500 uppercase mb-2">Share</h6>
+    <%= link_to "Add User", new_password_share_path(@password), 
+        class: "inline-block px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition" %>
+
+    <% if @password.users.excluding(current_user).any? %>
+      <div class="mt-4 space-y-3">
+        <h6 class="text-xs font-semibold text-gray-500 uppercase">Shared With</h6>
+        
+        <% @password.users.excluding(current_user).each do |user| %>
+          <div class="flex items-center justify-between bg-gray-50 rounded-lg p-3 border">
+            <p class="text-gray-800 truncate"><%= user.email %></p>
+            <%= link_to "Remove", password_share_path(@password, user), method: :delete, 
+                data: { turbo_confirm: "Are you sure?" }, 
+                class: "text-red-600 hover:text-red-800 text-sm font-medium transition" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+</div>
